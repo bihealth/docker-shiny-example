@@ -24,31 +24,12 @@ RUN echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu xenial-c
     apt-get install -y -t xenial-cran35 r-base && \
     apt-get install -y -t xenial-cran35 r-base-dev
 
-## Optionally install high performance linar algebra packages
-
-RUN apt-get install -y -t xenial-cran35 libatlas3-base && \
-    apt-get install -y -t xenial-cran35 libopenblas-base
-
-## Setup paths for packages
-
-# RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" \
-#         >> /usr/local/lib/R/etc/Rprofile.site \
-#     ## Add a library directory (for user-installed packages)
-#     && mkdir -p /usr/local/lib/R/site-library \
-#     && chown root:staff /usr/local/lib/R/site-library \
-#     && chmod g+wx /usr/local/lib/R/site-library \
-#     ## Fix library path
-#     && echo "R_LIBS_USER='/usr/local/lib/R/site-library'" \
-#         >> /usr/local/lib/R/etc/Renviron \
-#     && echo "R_LIBS=\${R_LIBS-'/usr/local/lib/R/site-library:/usr/local/lib/R/library:/usr/lib/R/library'}" \
-#         >> /usr/local/lib/R/etc/Renviron
-
 ## Install packages
 
 RUN apt-get install -y libssl-dev libxml2-dev libbz2-dev liblzma-dev libcurl4-openssl-dev
 
-RUN R -e 'install.packages(c("tidyverse", "shiny", "plotly", "DT", "BiocManager"))' && \
-    R -e 'BiocManager::install(c("GenomicFeatures", "BSgenome.Hsapiens.1000genomes.hs37d5", "EnsDb.Hsapiens.v75"))'
+#RUN R -e 'install.packages(c("tidyverse", "shiny", "plotly", "DT", "BiocManager"))' && \
+#    R -e 'BiocManager::install(c("GenomicFeatures", "BSgenome.Hsapiens.1000genomes.hs37d5", "EnsDb.Hsapiens.v75"))'
 
 ### SHINY
 
@@ -73,13 +54,13 @@ RUN wget --no-verbose https://download3.rstudio.org/ubuntu-14.04/x86_64/VERSION 
 
 RUN apt-get install -y git
 
-RUN  mkdir /root/.irods
-COPY irods_environment.json /root/.irods/.
+#RUN  mkdir /root/.irods
+#COPY irods_environment.json /root/.irods/.
 
 COPY . /usr/local/src/app/
 WORKDIR /usr/local/src/app
 
 EXPOSE 3838
 
-CMD ["Rscript", "app.R"]
+ENTRYPOINT ["Rscript", "app.R"]
 
