@@ -1,10 +1,12 @@
 library(shiny)
+options(shiny.host = '127.0.0.1')
+options(shiny.port = 8050)
 
 # Define UI for miles per gallon app ----
 ui <- pageWithSidebar(
   
   # App title ----
-  headerPanel("Miles Per Gallon"),
+  headerPanel("Docker Shiny Example"),
   
   # Sidebar panel for inputs ----
   sidebarPanel(),
