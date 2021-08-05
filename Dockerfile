@@ -1,30 +1,13 @@
-# Base image https://hub.docker.com/u/rocker/
-FROM rocker/shiny:latest
+# https://dev.to/bettyes/my-first-shiny-docker-image-1jp7
+#build an image on top of the base image for r version 3.5.1 from [rocker] (https://hub.docker.com/r/rocker/r-ver/~/dockerfile/)
+FROM rocker/r-ver:3.5.1 
+#install necessary libraries
+RUN R -e "install.packages(c('ggplot2','shiny'))"
 
-# system libraries of general use
-## install debian packages
-RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-    libxml2-dev \
-    libcairo2-dev \
-    libsqlite3-dev \
-    libmariadbd-dev \
-    libpq-dev \
-    libssh2-1-dev \
-    unixodbc-dev \
-    libcurl4-openssl-dev \
-    libssl-dev
+#copy the current folder into the path of the app
+COPY . /usr/local/src/app
+#set working directory to the app
+WORKDIR /usr/local/src/app
 
-## update system libraries
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get clean
-
-# copy necessary files
-## app folder
-COPY /app.R .
-
-# expose port
-EXPOSE 3838
-
-ENTRYPOINT ["Rscript", "app.R"]
-
+#set the unix commands to run the app
+CMD ["Rscript","app_run.R"]
